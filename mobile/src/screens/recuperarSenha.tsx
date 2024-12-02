@@ -9,9 +9,9 @@ import {
   Alert,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import InputField from "../components/inputField";
-import { Buttom } from "../components/Buttom";
-import LoadingScreen from "../components/loading/loginLoading";
+import InputField from "../components/InputField";
+import Button from "../components/Button";
+import LoadingScreen from "../components/loading/LoginLoading";
 
 function RecuperarSenha({ navigation }: PropsScreensApp) {
   const [email, setEmail] = useState("");
@@ -20,25 +20,14 @@ function RecuperarSenha({ navigation }: PropsScreensApp) {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleSubmit() {
+  const handleSubmit = async () => {
     setIsLoading(true);
     setErrorMessage("");
+
+    // Alerta para indicar contato necessário com os desenvolvedores.
     Alert.alert("Recuperar Senha", "Entre em contato com os desenvolvedores.");
-    //   try {
-    //     // const response = await recuperaSenha({ email, nome });
-    //     if (response) {
-    //       setSenha(response);
-    //     } else {
-    //       setErrorMessage("Nome ou e-mail não encontrados.");
-    //     }
-    //   } catch (error) {
-    //     console.error("Erro ao recuperar senha:", error);
-    //     setErrorMessage(
-    //       "Ocorreu um erro. Verifique se o usuário e nome estão corretos."
-    //     );
-    //   }
-    //   setIsLoading(false);
-  }
+    setIsLoading(false);
+  };
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(senha);
@@ -58,12 +47,8 @@ function RecuperarSenha({ navigation }: PropsScreensApp) {
             source={require("@/assets/images/job.png")}
             style={styles.image}
           />
-          <View style={styles.containerFull}>
-            <Text
-              style={{ fontSize: 20, fontWeight: "bold", marginBottom: 20 }}
-            >
-              Recuperar Senha
-            </Text>
+          <View style={styles.content}>
+            <Text style={styles.title}>Recuperar Senha</Text>
 
             {senha ? (
               <View style={styles.senhaContainer}>
@@ -96,9 +81,9 @@ function RecuperarSenha({ navigation }: PropsScreensApp) {
                 {errorMessage ? (
                   <Text style={styles.errorMessage}>{errorMessage}</Text>
                 ) : null}
-                <Buttom size="xlarge" onPress={handleSubmit}>
+                <Button size="xlarge" onPress={handleSubmit}>
                   Enviar
-                </Buttom>
+                </Button>
               </View>
             )}
           </View>
@@ -110,25 +95,36 @@ function RecuperarSenha({ navigation }: PropsScreensApp) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     backgroundColor: "#f5f5f5",
-    display: "flex",
-    flex: 1,
   },
-  containerFull: {
+  content: {
     width: "100%",
     alignItems: "center",
     justifyContent: "flex-start",
+    paddingHorizontal: 20,
+  },
+  image: {
+    width: "100%",
+    height: "40%",
+    resizeMode: "contain",
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
   inputContainer: {
-    width: "90%",
+    width: "100%",
     alignItems: "center",
-    marginBottom: 40,
-    gap: 30,
+    gap: 20,
   },
   senhaContainer: {
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 20,
   },
   senhaTexto: {
     fontSize: 18,
@@ -142,7 +138,8 @@ const styles = StyleSheet.create({
   },
   copyButton: {
     marginTop: 20,
-    padding: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     backgroundColor: "#4CAF50",
     borderRadius: 5,
   },
@@ -154,10 +151,6 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: "red",
     marginTop: 10,
-  },
-  image: {
-    width: "100%",
-    height: "40%",
   },
 });
 
