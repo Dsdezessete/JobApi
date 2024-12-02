@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "JobConnect",
-    "slug": "JobConnect",
+    "name": "Job App",
+    "slug": "job-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/job.png",
-    "scheme": "myapp",
+    "scheme": "jobapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -14,14 +14,16 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "JobConnect"
+      "bundleIdentifier": "com.jobapp", 
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "JobConnect"
+      "package": "com.jobapp",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
