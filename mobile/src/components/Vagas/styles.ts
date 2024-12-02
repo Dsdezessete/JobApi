@@ -1,59 +1,201 @@
-import styled from "styled-components/native";
-import { TouchableOpacity, Text, View } from "react-native";
+import React, { useState, useCallback } from "react";
+import { Container, FieldTime, Input, Text } from "./styles";
+import { Feather } from "@expo/vector-icons";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { IInputProps } from "native-base";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 
-export const Container = styled(TouchableOpacity)`
-  width: 100%;
-  height: 108px;
-  display: flex;
-  justify-content: space-between;
-  align-self: center;
-  flex-direction: row;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  background-color: #f4f4f4;
-  border-radius: 12px;
-  shadow-color: #000;
-  shadow-offset: 0px 2px;
-  shadow-opacity: 0.1;
-  shadow-radius: 4px;
-  elevation: 3;
-`;
+export type InputFieldProps = {
+  titulo?: string;
+  value?: any;
+  children?: string;
+  types?: "date" | "text" | "time" | "select";
+  options?: { label: string; value: string }[];
+  placeholder?: string;
+  secureTextEntry?: boolean;
+  onChangeText?: (value: string) => void;
+  error?: string;
+  required?: boolean;
+} & IInputProps;
 
-export const Title = styled(Text)`
-  font-size: 20px;
-  color: #0066ff;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-`;
+const InputField: React.FC<InputFieldProps> = ({
+  titulo,
+  placeholder,
+  onChangeText,
+  secureTextEntry,
+  value,
+  types = "text",
+  options = [],
+  error,
+  required = false,
+  ...rest
+}) => {
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [timeStringValue, setTimeStringValue] = useState("00:00");
+  const [dataStringValue, setDataStringValue] = useState("DD/MM/YYYY");
 
-export const BodyText = styled(Text)`
-  font-size: 18px;
-  color: #0066ff;
-  opacity: 0.8;
-`;
+  const formatDate = useCallback((date: Date): string => {
+    return date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }, []);
 
-export const ViewFlexColumn = styled(View)`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
+  const formatTime = useCallback((time: Date): string => {
+    return time.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }, []);
 
-export const ViewFlexRow = styled(View)`
-  align-self: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
+  const handleDateChange = useCallback((event: DateTimePickerEvent, selectedDate?: Date) => {
+    setShowDatePicker(false);
+    if (event.type === "set" && selectedDate) {
+      const formattedDate = formatDate(selectedDate);
+      setDataStringValue(formattedDate);
+      onChangeText && onChangeText(formattedDate);
+    }
+  }, [onChangeText, formatDate]);
 
-export const SecondaryText = styled(Text)`
-  font-size: 16px;
-  color: #666666;
-  font-weight: 300;
-`;
+  const handleTimeChange = useCallback((event: DateTimePickerEvent, selectedTime?: Date) => {
+    setShowTimePicker(false);
+    if (event.type === "set" && selectedTime) {
+      const formattedTime = formatTime(selectedTime);
+      setTimeStringValue(formattedTime);
+      onChangeText && onChangeText(formattedTime);
+    }
+  }, [onChangeText, formatTime]);
 
-export const IconContainer = styled(View)`
-  justify-content: center;
-  align-items: center;
-  margin-left: 10px;
-`;
+  const renderInput = () => {
+    switch (types) {
+      case "text":
+        return (
+          <Container>
+            <Text>{titulo}{required && <Text style={styles.requiredMarker}>*</Text>}</Text>
+            <Input
+              secureTextEntry={secureTextEntry}
+              value={value}
+              onChangeText={onChangeText}
+              placeholder={placeholder}
+              {...rest}
+            />
+            {error && <Text style={styles.errorText}>{error}</Text>}
+          </Container>
+        );
+
+      case "date":
+        return (
+          <Container>
+            <Text>{titulo}{required && <Text style={styles.requiredMarker}>*</Text>}</Text>
+            <TouchableOpacity
+              onPress={() => setShowDatePicker(true)}
+              style={styles.inputContainer}
+            >
+              {showDatePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="date"
+                  display="inline"
+                  onChange={handleDateChange}
+                  {...rest}
+                />
+              )}
+              <Text>{dataStringValue}</Text>
+              <Feather name="calendar" size={24} color="gray" />
+            </TouchableOpacity>
+            {error && <Text style={styles.errorText}>{error}</Text>}
+          </Container>
+        );
+
+      case "time":
+        return (
+          <FieldTime>
+            <Text>{titulo}{required && <Text style={styles.requiredMarker}>*</Text>}</Text>
+            <TouchableOpacity
+              onPress={() => setShowTimePicker(true)}
+              style={styles.inputContainer}
+            >
+              {showTimePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="time"
+                  display="default"
+                  locale="pt-BR"
+                  onChange={handleTimeChange}
+                  {...rest}
+                />
+              )}
+              <Text>{timeStringValue}</Text>
+              <Feather name="clock" size={24} color="gray" />
+            </TouchableOpacity>
+            {error && <Text style={styles.errorText}>{error}</Text>}
+          </FieldTime>
+        );
+
+      case "select":
+        return (
+          <Container>
+            <Text>{titulo}{required && <Text style={styles.requiredMarker}>*</Text>}</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={value || selectedValue}
+                onValueChange={(itemValue) => {
+                  setSelectedValue(itemValue);
+                  onChangeText && onChangeText(itemValue);
+                }}
+                {...rest}
+              >
+                {options.map((option) => (
+                  <Picker.Item
+                    key={option.value}
+                    label={option.label}
+                    value={option.value}
+                  />
+                ))}
+              </Picker>
+            </View>
+            {error && <Text style={styles.errorText}>{error}</Text>}
+          </Container>
+        );
+    }
+  };
+
+  return renderInput();
+};
+
+const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 40,
+    paddingHorizontal: 15,
+    height: 50,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  pickerContainer: {
+    borderRadius: 40,
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
+  },
+  requiredMarker: {
+    color: 'red',
+    marginLeft: 5,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 5,
+    marginLeft: 15,
+  },
+});
+
+export default InputField;
