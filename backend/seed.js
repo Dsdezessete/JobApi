@@ -1,75 +1,81 @@
 const vagasRepository = require("./src/repositories/vagasRepository");
 const sequelize = require("./src/config/database");
 
+const vagas = [
+  {
+    descricao: "Desenvolvimento de APIs e integração com sistemas de terceiros.",
+    titulo: "Desenvolvedor Back-End",
+    dataCadastro: new Date(),
+    telefone: "11987654321",
+    empresa: "CodeCraft",
+    stats: true,
+  },
+  {
+    descricao: "Análise de dados para gerar insights estratégicos.",
+    titulo: "Analista de Dados",
+    dataCadastro: new Date(),
+    telefone: "21987654321",
+    empresa: "DataWorks",
+    stats: true,
+  },
+  {
+    descricao: "Planejamento e execução de estratégias de SEO.",
+    titulo: "Especialista em SEO",
+    dataCadastro: new Date(),
+    telefone: "31987654321",
+    empresa: "Web Growth",
+    stats: false,
+  },
+  {
+    descricao: "Atendimento ao cliente e resolução de dúvidas técnicas.",
+    titulo: "Consultor de Suporte",
+    dataCadastro: new Date(),
+    telefone: "41987654321",
+    empresa: "Help Desk Solutions",
+    stats: true,
+  },
+  {
+    descricao: "Gerenciamento de projetos e equipes multidisciplinares.",
+    titulo: "Gerente de Projetos",
+    dataCadastro: new Date(),
+    telefone: "51987654321",
+    empresa: "PM Professionals",
+    stats: true,
+  },
+  {
+    descricao: "Desenvolvimento e manutenção de sistemas de segurança cibernética.",
+    titulo: "Especialista em Segurança da Informação",
+    dataCadastro: new Date(),
+    telefone: "61987654321",
+    empresa: "SecureTech",
+    stats: false,
+  },
+  {
+    descricao: "Design de soluções inovadoras para aplicativos móveis.",
+    titulo: "Designer de Aplicativos",
+    dataCadastro: new Date(),
+    telefone: "71987654321",
+    empresa: "AppVision",
+    stats: true,
+  },
+];
+
 const seedVagas = async () => {
-  await sequelize.sync({ force: true }); // Limpa e recria as tabelas
+  try {
+    await sequelize.sync({ force: true });
+    console.log("Database synchronized.");
 
-  const vagas = [
-    {
-      descricao: "Desenvolvimento de funcionalidades para aplicações web.",
-      titulo: "Desenvolvedor Full Stack",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Tech Solutions",
-      stats: true,
-    },
-    {
-      descricao: "Responsável por gerenciar a equipe de vendas.",
-      titulo: "Gerente de Vendas",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Commerce Corp",
-      stats: true,
-    },
-    {
-      descricao: "Criação de layouts e interfaces de usuário.",
-      titulo: "Designer UX/UI",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Creative Agency",
-      stats: false,
-    },
-    {
-      descricao: "Suporte técnico e resolução de problemas.",
-      titulo: "Suporte Técnico",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Support LLC",
-      stats: false,
-    },
-    {
-      descricao: "Coordenação de campanhas de marketing digital.",
-      titulo: "Especialista em Marketing Digital",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Marketing Experts",
-      stats: true,
-    },
-    {
-      descricao: "Manutenção de infraestrutura de redes.",
-      titulo: "Engenheiro de Redes",
-      dataCadastro: new Date(),
-      telefone: "71997248724",
-      empresa: "Network Solutions",
-      stats: false,
-    },
-    {
-      descricao: "take effect.",
-      titulo: "jijs",
-      dataCadastro: "2024-10-17",
-      telefone: "71997248724",
-      empresa: "AllyssonCidade",
-      stats: true,
-    },
-  ];
+    await Promise.all(
+      vagas.map(async (vaga) => {
+        await vagasRepository.create(vaga);
+        console.log(`Vaga inserida: ${vaga.titulo}`);
+      })
+    );
 
-  for (const vaga of vagas) {
-    await vagasRepository.create(vaga);
+    console.log("Seed de vagas criada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao criar seed de vagas:", error);
   }
-
-  console.log("Seed de vagas criada com sucesso!");
 };
 
-seedVagas().catch((error) => {
-  console.error("Erro ao criar seed de vagas:", error);
-});
+seedVagas();
