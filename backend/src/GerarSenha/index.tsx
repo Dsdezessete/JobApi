@@ -22,5 +22,6 @@ export function gerarSenhaAleatoria(tamanho: number): string {
         senhaObrigatoria.push(char);
     }
 
+    
     return senhaObrigatoria.sort(() => Math.random() - 0.5).join('');
 }
