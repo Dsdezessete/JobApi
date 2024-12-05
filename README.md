@@ -27,12 +27,6 @@ Node.js: Plataforma para execução de JavaScript no lado do servidor.
 
 Express.js: Framework web para construção de APIs rápidas e escaláveis.
 
-### Banco de Dados:
-
-MongoDB: Banco de dados NoSQL para armazenamento eficiente de dados.
-
-Mongoose: Biblioteca de modelagem de objetos para MongoDB.
-
 ### Frontend/Mobile:
 
 React Native: Framework para desenvolvimento de aplicativos móveis multiplataforma.
@@ -41,15 +35,11 @@ Expo: Ferramenta para simplificar o desenvolvimento com React Native.
 
 ### Outras Tecnologias:
 
-Docker: Containerização para isolar e gerenciar serviços.
-
 JWT (JSON Web Token): Autenticação segura entre cliente e servidor.
 
 Bcrypt.js: Biblioteca para hashing de senhas.
 
 Axios: Cliente HTTP para consumo de APIs.
-
-ESLint e Prettier: Ferramentas para linting e formatação de código.
 
 ### Como Começar
 Pré-requisitos
@@ -113,5 +103,6 @@ Licença
 
 ### Contato
 Para dúvidas ou contribuições:
-
-Autor: Dani Silva
+Autor: Dani silva
+Instagram: @dsdezessete
+Twitter: @dsdezessete
